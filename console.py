@@ -113,10 +113,8 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def check_value(self, value):
-        """
-        check value if is string or int value
-        """
+    def check_value_type(self, value):
+        """checks the type of value"""
         arg = ""
         if value[0] == '"' and value[-1] == '"':
 
@@ -144,13 +142,13 @@ class HBNBCommand(cmd.Cmd):
         new_instance = eval(arg[0])()
         print(arg[0])
         arg.pop(0)
-        for a in arg:
-            a = a.split('=')
-            if len(a) != 2:
+        for item in arg:
+            item = item.split('=')
+            if len(item) != 2:
                 continue
-            key = a[0]
-            value = a[1]
-            value = self.check_value(value)
+            key = item[0]
+            value = item[1]
+            value = self.check_value_type(value)
             if value is None:
                 continue
             else:
