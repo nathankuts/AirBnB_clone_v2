@@ -1,11 +1,17 @@
 #!/usr/bin/python3
 """New Database Engine"""
 
-
-from models.base_model import BaseModel, Base
 from os import getenv
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy import (create_engine)
+from sqlalchemy.ext.declarative import declarative_base
+from models.base_model import Base
+from models.state import State
+from models.city import City
+from models.user import User
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
 
 
 class DBStorage():
@@ -29,12 +35,6 @@ class DBStorage():
 
     def all(self, cls=None):
         """query on the current db session & return a dict"""
-        from models.city import City
-        from models.place import Place
-        from models.review import Review
-        from models.state import State
-        from models.user import User
-        from models.amenity import Amenity
 
         my_classes = (Amenity, City, Place, Review, State, User)
         objects = dict()
@@ -73,3 +73,7 @@ class DBStorage():
             bind=self.__engine, expire_on_commit=False)
         my_session = scoped_session(my_session_maker)
         self.__session = my_session()
+
+    def close(self):
+        """close the query"""
+        self.__session.close()
