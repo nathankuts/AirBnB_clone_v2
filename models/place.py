@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
-from models.amenity import Amenity
+
 from models.base_model import BaseModel, Base
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Float, Integer, Table
@@ -64,5 +64,6 @@ class Place(BaseModel, Base):
             """Setter attribute amenities that handles append method
             for adding an Amenity.id to the attribute amenity_ids.
             """
+            from models.amenity import Amenity
             if isinstance(obj, Amenity):
                 self.amenity_ids.append(obj.id)
