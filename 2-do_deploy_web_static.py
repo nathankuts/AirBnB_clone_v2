@@ -12,6 +12,7 @@ from datetime import datetime
 env.hosts = ['18.234.105.167', '100.25.222.179']
 env.user = "ubuntu"
 
+
 def do_pack():
     """Create a tar gzipped archive of the directory web_static."""
     # obtain the current date and time
@@ -32,7 +33,8 @@ def do_pack():
     else:
         return archive_path
 
-    def do_deploy(archive_path):
+
+def do_deploy(archive_path):
     '''use os module to check for valid file path'''
     if os.path.exists(archive_path):
         archive = archive_path.split('/')[1]
