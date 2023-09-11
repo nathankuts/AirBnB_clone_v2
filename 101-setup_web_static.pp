@@ -1,60 +1,34 @@
-nstall Nginx
-package { 'nginx':
-  ensure => 'installed',
+# puppet manifest preparing a server for static content deployment
+exec { 'apt-get-update':
+  command => '/usr/bin/env apt-get -y update',
 }
-
-# Create necessary directories if they don't exist
-file { '/data/web_static/releases/test/':
-  ensure => 'directory',
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
-  mode   => '0755',
-  recurse => true,
+-> exec {'b':
+  command => '/usr/bin/env apt-get -y install nginx',
 }
-
-file { '/data/web_static/shared/':
-  ensure => 'directory',
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
-  mode   => '0755',
-  recurse => true,
+-> exec {'c':
+  command => '/usr/bin/env mkdir -p /data/web_static/releases/test/',
 }
-
-# Create a fake HTML file for testing
-file { '/data/web_static/releases/test/index.html':
-  ensure  => 'file',
-  owner   => 'ubuntu',
-  group   => 'ubuntu',
-  mode    => '0644',
-  content => '<html>
-    <head>
-    </head>
-    <body>
-      Holberton School
-    </body>
-  </html>',
+-> exec {'d':
+  command => '/usr/bin/env mkdir -p /data/web_static/shared/',
 }
-
-# Create or recreate the symbolic link
-file { '/data/web_static/current':
-  ensure  => 'link',
-  target  => '/data/web_static/releases/test/',
-  owner   => 'ubuntu',
-  group   => 'ubuntu',
+-> exec {'e':
+  command => '/usr/bin/env echo "<html>
+  <head>
+  </head>
+  <body>
+	Holberton School
+  </body>
+</html>" > /data/web_static/releases/test/index.html',
 }
-
-# Update Nginx configuration
-file_line { 'nginx_hbnb_static':
-  path    => '/etc/nginx/sites-available/default',
-  line    => "        location /hbnb_static/ {\n            alias /data/web_static/current/;\n        }",
-  require => Package['nginx'],
-  notify  => Service['nginx'],
+-> exec {'f':
+  command => '/usr/bin/env ln -sf /data/web_static/releases/test /data/web_static/current',
 }
-
-# Ensure Nginx is running and enabled
-service { 'nginx':
-  ensure  => 'running',
-  enable  => true,
-  require => Package['nginx'],
+-> exec {'h':
+  command => '/usr/bin/env sed -i "/listen 80 default_server/a location /hbnb_static/ { alias /data/web_static/current/;}" /etc/nginx/sites-available/default',
 }
-
+-> exec {'i':
+  command => '/usr/bin/env chown -R ubuntu:ubuntu /data',
+}
+-> exec {'g':
+  command => '/usr/bin/env service nginx restart',
+}
