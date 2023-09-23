@@ -4,6 +4,7 @@
 from flask import Flask, render_template
 from models import storage
 from models.state import State
+from models.amenity import Amenity
 
 
 app = Flask(__name__)
@@ -19,7 +20,7 @@ def teardown(self):
 def hbnb_filters():
     """Displays HBnB filters page"""
     states = storage.all(State)
-    amenities = storage.all("Amenity")
+    amenities = storage.all(Amenity)
     return render_template("10-hbnb_filters.html",
                            states=states, amenities=amenities)
 
